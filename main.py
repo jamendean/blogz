@@ -1,95 +1,65 @@
-from flask import Flask, request, redirect, render_template, flash
-from flask_sqlalchemy import SQLAlchemy
-from datetime import datetime
+from flask import Flask, request, redirect
+from flask import render_template, session, flash
+from flask_sqlalchemy import SQLAlchemy 
 
 app = Flask(__name__)
 app.config['DEBUG'] = True
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://build-a-blog:build-a-blog@localhost:8889/build-a-blog'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://build-a-blog:buildablog@localhost:8889/build-a-blog'
 app.config['SQLALCHEMY_ECHO'] = True
-db = SQLAlchemy(app)
-app.secret_key = 'f8wv3w2f>v9j4sEuhcNYydAGMzzZJgkGgyHE9gUqaJcCk^f*^o7fQyBT%XtTvcYM'
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+db = SQLAlchemy(app) # pylint: disable=locally-disabled, invalid-name
+app.secret_key = 'sdfasdfasdf'
 
 
+##### Classes ####
 class Entry(db.Model):
-    '''
-    Stores blog entries
-    '''
+    
     id = db.Column(db.Integer, primary_key=True)
-    title = db.Column(db.String(180))
-    body = db.Column(db.String(1000))
-    created = db.Column(db.DateTime)
+    name = db.Column(db.String(120))
+    text = db.Column(db.String(50000))
 
-    def __init__(self, title, body ):
-        self.title = title
-        self.body = body
-        self.created = datetime.utcnow()
+    def __init__(self, name, text):
+        self.name = name
+        self.text = text
 
-    def is_valid(self):
-        '''
-        Our naive validation just requires that everything be present.
-        '''
-        if self.title and self.body and self.created:
-            return True
-        else:
-            return False
 
-#
-@app.route("/")
-def index():
-    '''
-    Convenience route so the bare URL displays all the entries
-    '''
-    return redirect("/blog")
-#
-@app.route("/blog")
-def display_blog_entries():
-    '''
-    Either list one entry with the given ID
-    Or list all blog entries (in default or newest order)
-    '''
-    # TODO refactor to use routes with variables instead of GET parameters
-    entry_id = request.args.get('id')
-    if (entry_id):
-        entry = Entry.query.get(entry_id)
-        return render_template('single_entry.html', title="Blog Entry", entry=entry)
+#### Routes ####
+@app.route('/')
+def to_mainpage():
+    return redirect('/blog')
 
-    # if we're here, we need to display all the entries
-    # TODO store sort direction in session[] so we remember user's preference
-    sort = request.args.get('sort')
-    if (sort=="newest"):
-        all_entries = Entry.query.order_by(Entry.created.desc()).all()
-    else:
-        all_entries = Entry.query.all()   
-    return render_template('all_entries.html', title="All Entries", all_entries=all_entries)
 
-#
-@app.route('/new_entry', methods=['GET', 'POST'])
-def new_entry():
-    '''
-    GET: Display form for new blog entry
-    POST: create new entry or redisplay form if values are invalid
-    '''
+@app.route('/blog')
+def blog():
+    entries = Entry.query.all()
+    return render_template('blog-home.html', title='Home', entries=entries)
+
+
+@app.route('/newpost', methods=['GET','POST'])
+def newpost():
     if request.method == 'POST':
-        new_entry_title = request.form['title']
-        new_entry_body = request.form['body']
-        new_entry = Entry(new_entry_title, new_entry_body)
-
-        if new_entry.is_valid():
+        entry_name = request.form['name']
+        entry_text = request.form['text']
+        if entry_name == '' or entry_text == '':
+            flash('Your blog post must have a title and body', 'error')
+            return redirect('/newpost')
+        else: 
+            new_entry = Entry(entry_name, entry_text)
             db.session.add(new_entry)
             db.session.commit()
+            entry_id = new_entry.id
+            return redirect('/blog')
+    return render_template('newpost.html')
 
-            # display just this most recent blog entry
-            url = "/blog?id=" + str(new_entry.id)
-            return redirect(url)
-        else:
-            flash("Please check your entry for errors. Both a title and a body are required.")
-            return render_template('new_entry_form.html',
-                title="Create new blog entry",
-                new_entry_title=new_entry_title,
-                new_entry_body=new_entry_body)
 
-    else: # GET request
-        return render_template('new_entry_form.html', title="Create new blog entry")
-#
+@app.route('/view-post')
+def view_post():
+    entry_id = request.args.get('id')
+    entry_veiw = Entry.query.filter_by(id=entry_id).first()
+    name = entry_veiw.name
+    text = entry_veiw.text
+    return render_template('view-post.html', name=name, text=text)
+
+
 if __name__ == '__main__':
     app.run()
