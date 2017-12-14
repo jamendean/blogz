@@ -1,54 +1,62 @@
-from flask import Flask, request, redirect, render_template, session, flash
+from flask import Flask, request, redirect
+from flask import render_template, session, flash
 from flask_sqlalchemy import SQLAlchemy 
 
 app = Flask(__name__)
 app.config['DEBUG'] = True
-
-# Note: the connection string after :// contains the following info:
-# user:password@server:portNumber/databaseName
-
 app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://build-a-blog:nemaj1990@localhost:8889/build-a-blog'
 app.config['SQLALCHEMY_ECHO'] = True
-db = SQLAlchemy(app)
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+
+db = SQLAlchemy(app) # pylint: disable=locally-disabled, invalid-name
 
 
-class Blog(db.Model):
-
+class Entry(db.Model):
+    
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(120))
-    entry = db.Column(db.String(240))
+    text = db.Column(db.String(120))
 
-    def __init__(self, name, entry):
+    def __init__(self, name, text):
         self.name = name
-        self.entry = entry 
+        self.text = text
+
+
+@app.route('/')
+def to_mainpage():
+    return redirect('/blog')
 
 
 @app.route('/blog')
-def index():
-    
-    id_exists = request.args.get('id')
-    if id_exists:
-        single_blog = Blog.query.filter_by(id = id_exists).first()
-        return render_template('singlepost.html', blog=single_blog)
-    else:   
-        blogs = Blog.query.all()
-        return render_template('blog.html', blogs=blogs)
+def blog():
+    entries = Entry.query.all()
+    return render_template('blog-home.html', title='Home', entries=entries)
 
 
-@app.route('/newpost', methods=['POST', 'GET'])
-def new_post():
-
+@app.route('/newpost', methods=['GET','POST'])
+def newpost():
     if request.method == 'POST':
-        name = request.form['name']
-        entry = request.form['entry']
-        new_blog = Blog(name,entry)
-        db.session.add(new_blog)
-        db.session.commit()
-        return redirect('/blog')
+        entry_name = request.form['name']
+        entry_text = request.form['text']
+        if entry_name == '' or entry_text == '':
+            flash('Your blog post must have a title and body', 'error')
+            return redirect('/newpost')
+        else: 
+            new_entry = Entry(entry_name, entry_text)
+            db.session.add(new_entry)
+            db.session.commit()
+            entry_id = new_entry.id
+            return redirect('/blog')
+    return render_template('newpost.html')
 
-    else:
-        return render_template('newpost.html')
 
+@app.route('/view-post')
+def view_post():
+    entry_id = request.args.get('id')
+    entry_view = Entry.query.filter_by(id=entry_id).first()
+    name = entry_view.name
+    text = entry_view.text
+    return render_template('view-post.html', name=name, text=text)
 
 
 if __name__ == '__main__':
