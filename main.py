@@ -9,7 +9,7 @@ app.config['SQLALCHEMY_ECHO'] = True
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db = SQLAlchemy(app) # pylint: disable=locally-disabled, invalid-name
-app.secret_key = 'sdfasdfasdf'
+
 
 
 ##### Classes ####
