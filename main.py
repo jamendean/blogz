@@ -56,7 +56,7 @@ def newpost():
 @app.route('/view-post')
 def view_post():
     entry_id = request.args.get('id')
-    entry_veiw = Entry.query.filter_by(id=entry_id).first()
+    entry_view = Entry.query.filter_by(id=entry_id).first()
     name = entry_view.name
     text = entry_view.text
     return render_template('view-post.html', name=name, text=text)
