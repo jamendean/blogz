@@ -34,7 +34,7 @@ def blog():
 
 
 @app.route('/new-post', methods=['GET','POST'])
-def newpost():
+def new-post():
     if request.method == 'POST':
         entry_name = request.form['name']
         entry_text = request.form['text']
