@@ -33,21 +33,21 @@ def blog():
     return render_template('blog-home.html', title='Home', entries=entries)
 
 
-@app.route('/newpost', methods=['GET','POST'])
+@app.route('/new-post', methods=['GET','POST'])
 def newpost():
     if request.method == 'POST':
         entry_name = request.form['name']
         entry_text = request.form['text']
         if entry_name == '' or entry_text == '':
-            flash('Your blog post must have a title and body', 'error')
-            return redirect('/newpost')
+            flash('Excuse me. Your blog post must have a title and body.', 'error')
+            return redirect('/new-post')
         else: 
             new_entry = Entry(entry_name, entry_text)
             db.session.add(new_entry)
             db.session.commit()
             entry_id = new_entry.id
             return redirect('/blog')
-    return render_template('newpost.html')
+    return render_template('new-post.html')
 
 
 @app.route('/view-post')
