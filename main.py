@@ -7,6 +7,7 @@ app.config['DEBUG'] = True
 app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://build-a-blog:nemaj1990@localhost:8889/build-a-blog'
 app.config['SQLALCHEMY_ECHO'] = True
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+app.config['SECRET_KEY'] = "My_secret_string"
 
 db = SQLAlchemy(app) 
 
@@ -39,7 +40,7 @@ def newpost():
         entry_name = request.form['name']
         entry_text = request.form['text']
         if entry_name == '' or entry_text == '':
-            flash('Excuse me. Your blog post must have a title and body.', 'error')
+            flash('Excuse me. Your blog post must have a title AND body.', 'error')
             return redirect('/new-post')
         else: 
             new_entry = Entry(entry_name, entry_text)
