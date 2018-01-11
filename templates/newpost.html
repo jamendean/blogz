@@ -1,21 +1,27 @@
-{% extends "base.html" %}
+{% extends 'base.html' %}
 
 {% block content %}
-    <h1>Build a Blog</h1>
-    <form method='post'>
-        Add New Post
-        <label>
-            <div>Title</div>
-            <input type="text" name='title' required/>
-        </label>
-        <label>
-            <div>Post</div>
-            <input type="textarea" name='body' required/>
-        </label>
-              
-        
-        <input type="submit" value='Add Post' />
-    </form>
+<style>
+    .login, .newpost, .signup {
+        visibility: hidden;
+    }
+</style>
 
-        
+<form action='/newpost' method='post' class="newpost_form">
+    <h1 class="new_blog">New Entry</h1>
+    
+    <div class="newpost-div">
+    <label>Title:</label><br/>
+    <input type="text" name="blog_title" value="{{blog_title}}" class="txtbox" placeholder="Your blog title"/><br/>
+    <span class="error">{{title_error}}</span><br/> <br/>
+
+    <label>Post:</label><br/>
+    <textarea name="blog_content" placeholder="Type your blog here..." class="textarea">{{blog_content}}</textarea><br/>
+    <span class="error">{{content_error}}</span><br/><br/>
+
+    <input type="submit" value="Add Entry"/>
+    </div>
+
+</form>
+
 {% endblock %}
