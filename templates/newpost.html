@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<style>
+    .login, .newpost, .signup {
+        visibility: hidden;
+    }
+</style>
+
+<form action='/newpost' method='post' class="newpost_form">
+    <h1 class="new_blog">Add a Blog Entry</h1>
+    
+    <div class="newpost-div">
+    <label>Title for new blog:</label><br/>
+    <input type="text" name="blog_title" value="{{blog_title}}" class="txtbox" placeholder="Your blog title"/><br/>
+    <span class="error">{{title_error}}</span><br/> <br/>
+
+    <label>Your new blog:</label><br/>
+    <textarea name="blog_content" placeholder="Type your blog here..." class="textarea">{{blog_content}}</textarea><br/>
+    <span class="error">{{content_error}}</span><br/><br/>
+
+    <input type="submit" value="Add Entry"/>
+    </div>
+
+</form>
+
+{% endblock %}
