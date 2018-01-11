@@ -1,15 +1,33 @@
-{% extends 'base.html' %}
+{% extends "base.html" %}
 
 {% block content %}
+    <h1>Log In</h1>
+    <a href='/signup'>Create Account</a>
+        <form action="/login" method="POST">
+            <table>
+                <tbody><tr>
+                    <td>
+                        <label for="username">Username</label>
+                    </td>
+                    <td>
+                        <input name="username" type="text" value="">
+                        
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <label for="password">Password</label>
+                    </td>
+                    <td>
+                        <input name="password" type="password" required>
+                        
+                    </td>
+                </tr>
+                               
+            </tbody></table>
+            <input type="submit" value="Login">
+        </form>
+    
 
-<form action="/login" method="post" class="login_form">
-    <div class="login_div">
-        <label for="email">Username</label>
-        <input type="email" name="email" placeholder="Email" class="txtbox"><br/>
-        <label for="password">Password</label>
-        <input type="password" name="password" placeholder="Password" class="txtbox"><br/>
-        <input type="submit" value="Login">
-    </div>
-</form>
 
 {% endblock %}

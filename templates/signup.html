@@ -1,22 +1,45 @@
 {% extends 'base.html' %}
 
-{% block content %}
-<style>
-    .logout, .newpost, .signup, .login {
-        visibility: hidden;
-    }
-</style>
+{% extends "base.html" %}
 
-<form action="/signup" method="post" class="new">
-    <div class="signup_div"
-        <label for="email">Username:</label>
-        <input type="email" name="email" placeholder="Email" class="txtbox"><br/>
-        <label for="password">Password:</label>
-        <input type="password" name="password" placeholder="Password" class="txtbox"><br/>
-        <label for="verify">Verify:</label>
-        <input type="password" name="verify" placeholder="Re-enter password" class="txtbox"><br/>
-        <input type="submit" value="Signup">
-    </div>
-</form>
+{% block content %}
+    <h1>Register</h1>
+        <form action="/signup" method="POST">
+            <table>
+                <tbody><tr>
+                    <td>
+                        <label for="username">Username</label>
+                    </td>
+                    <td>
+                        <input name="username" type="text" value="{{username}}">
+                        <span class="error">{{user_error}}</span>
+                        <span class="error">{{duplicate_error}}</span>
+                    </td>
+                </tr>             
+                
+                <tr>
+                    <td>
+                        <label for="password">Password</label>
+                    </td>
+                    <td>
+                        <input name="password" type="password">
+                        <span class="error">{{pass_error}}</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <label for="verify">Verify Password</label>
+                    </td>
+                    <td>
+                        <input name="verify" type="password">
+                        <span class="error">{{verify_error}}</span>                        
+                    </td>
+                </tr>
+                
+            </tbody></table>
+            <input type="submit" value="Sign Up">
+        </form>
+    
+
 
 {% endblock %}

@@ -1,109 +1,43 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>My Blog App</title>
+        <title>{{title}}</title>
         <style>
-            .build {
-                text-align: center;
-            }
-            .error, .message {
+            .error {
                 color: red;
-                font-style: italic;
-            }
-            .newpost {
-                margin-left: 50px;
-            }
-            .single {
-                text-align: center;
-            }
-            .blog {
-                float: left;
-            }
-            .logout {
-                float: right;
-            }
-            .new {
-                margin-top: 150px;
-                margin-left: 200px;
-            }
-            .txtbox {
-                width: 50%;
-                padding: 12px 20px;
-                margin: 8px 0;
-                display: inline-block;
-                border: 1px solid #ccc;
-                border-radius: 4px;
-                box-sizing: border-box;
-            }
-            input[type=submit] {
-                width: 50%;
-                background-color: gray;
-                color: white;
-                padding: 14px 20px;
-                margin: 8px 0;
-                border: none;
-                border-radius: 4px;
-                cursor: pointer;
-            }
-            .textarea {
-                width: 50%;
-                height: 100px;
-            }
-            .info {
-                color: green;
-            }
-            /* Newpost CSS */
-            .newpost_form {
-                margin-left: 35%;
-            }
-            .new_blog {
-                margin-left: 50px;
-            }
-            .newpost-div {
-                margin-top: 50px;
-            }
-            /* Signup CSS */
-            .signup_div {
-                margin-top: 50px;
-            }
-            /* Login CSS */
-            .login_form {
-                margin-top: 50px;
-                margin-left: 35%;
             }
         </style>
-
-        <!-- Latest compiled and minified CSS -->
-        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
-
-        <!-- Optional theme -->
-        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
-
-        <!-- Latest compiled and minified JavaScript -->
-        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
     </head>
-    <body>
-        {% with messages = get_flashed_messages(with_categories=True) %}
+<body>
+
+
+    <div>
+        <a href='/'>Home</a>
+    </div>
+    <div>
+        <a href='/login'>Log In</a>
+    </div>
+    <div>
+        <a href='/logout'>Log Out</a>
+    </div>
+    <div>
+        <a href='/blog'>All My Blogs</a>
+    </div>
+    <div>
+        <a href='/newpost'>Add A New Post</a>
+    </div>
+    
+
+    {% with messages = get_flashed_messages(with_categories=True) %}
         <ul>
         {% for category,message in messages %}
-            <p class="{{category}}">{{message}}</p>
+            <li class="{{category}}">{{message}}</li>
         {% endfor %}
         </ul>
-        {% endwith %}
-        
-        <nav class="navbar navbar-default">
-            <a class="blog" href="/blog">Main Blog Page</a>
-            <a class="newpost" href="/newpost">Add a Blog Entry</a>
-            <a class="signup" href="/signup">Create Account</a>
-            <a class="login" href="/login">Login</a>
-            <a class="logout" href="/logout">Logout</a>
-            <a class="home" href="/">Home</a>
-        </nav>
+    {% endwith %}
 
-        
+    {% block content %}
+    {% endblock %}
 
-        {% block content %}
-
-        {% endblock %}
-    </body>
+</body>
 </html>
