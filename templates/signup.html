@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<style>
+    .logout, .newpost, .signup, .login {
+        visibility: hidden;
+    }
+</style>
+
+<form action="/signup" method="post" class="new">
+    <div class="signup_div"
+        <label for="email">Username:</label>
+        <input type="email" name="email" placeholder="Email" class="txtbox"><br/>
+        <label for="password">Password:</label>
+        <input type="password" name="password" placeholder="Password" class="txtbox"><br/>
+        <label for="verify">Verify:</label>
+        <input type="password" name="verify" placeholder="Re-enter password" class="txtbox"><br/>
+        <input type="submit" value="Signup">
+    </div>
+</form>
+
+{% endblock %}
